@@ -109,9 +109,10 @@ val indServiceModule = module {
 
         val phoneNumber = params.get<String>(4)
         val apiKey = params.get<String>(5)
+        val telegramUserName = params.get<String>(6)
 
         val messageService = when (params.get<String>(0)) {
-            "telegram" -> inject<MessageService>(named("telegram"))
+            "telegram" -> inject<MessageService>(named("telegram")) { parametersOf(telegramUserName) }
             "whatsApp" -> inject<MessageService>(named("whatsApp")) { parametersOf(phoneNumber, apiKey) }
             else -> throw RuntimeException("Messaging service type is unknown!")
         }.value

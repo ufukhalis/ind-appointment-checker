@@ -14,12 +14,12 @@ Due to increasing demand, there is hard to find a slot immediately for your need
 ### How to use?
 
 ---
-The application itself uses JVM to be run, you can download the JAR file from the releases section(good to have latest JRE installed in your env.) or clone it for some manual work :)
+The application itself uses JVM to be run, you can download the JAR file from the [releases](https://github.com/ufukhalis/ind-appointment-checker/releases) section(good to have latest JRE installed in your env.) or clone it for some manual work :)
 
 `IND Appointment Checker` is a console application so when you run the JAR file, you should pass some arguments to it. You can see available arguments running below command.
 
 ```shell
-java -jar ind-appointment-checker-1.0.0.jar -h
+java -jar ind-appointment-checker-1.1.0.jar -h
 
 --messagingType, -t -> Messaging Type(whatsApp, telegram) (always required) { String }
 --whatsAppApiKey, -wp-key -> WhatsApp Api Key { String }
@@ -32,17 +32,28 @@ XPAT_CENTER_EINDHOVEN, EXPAT_CENTER_DEN_HAAG, EXPAT_CENTER_ROTTERDAM, EXPAT_CENT
 --help, -h -> Usage info
 ```
 
-Before run the actual command, you need to prepare your phone from this link to be able to get messages -> https://www.callmebot.com/blog/free-api-whatsapp-messages/
-> Currently, IND Appointment Checker application only supports WhatsApp, later on there will be other integration as well.
+Before run the actual command, you need to prepare your phone from this link to be able to get messages, follow the below links. 
+
+* WhatsApp Integration -> https://www.callmebot.com/blog/free-api-whatsapp-messages/
+* Telegram Integration -> https://www.callmebot.com/blog/telegram-text-messages/
+
+> Currently, IND Appointment Checker application only supports WhatsApp and Telegram, later on there will be other integration as well.
 
 And then, we can build the actual run command like below
 
 ```shell
-java -jar ind-appointment-checker-1.0.0.jar -t whatsApp -wp-key {yourApiKey} -wp-pn {yourWhatsAppPhoneNumber} -fd 2022-12-30 -l AMSTERDAM -p 15 -
-pd BIOMETRIC
+# WhatsApp Usage
+java -jar ind-appointment-checker-1.1.0.jar -t whatsApp -wp-key {yourApiKey} -wp-pn {yourWhatsAppPhoneNumber} -fd 2022-12-30 -l AMSTERDAM -p 15 -pd BIOMETRIC
 ```
 
-> The explanation of above command is that check a BIOMETRIC appointment in AMSTERDAM lower than this date 2022-10-30 for each 15 SECONDS and if there is one then send a message via WhatsApp.
+Or
+
+```shell
+# Telegram Usage
+java -jar ind-appointment-checker-1.1.0.jar -t telegram -tl-username {yourTelegramUserName} -fd 2022-12-30 -l AMSTERDAM -p 15 -pd BIOMETRIC
+```
+
+> The explanation of above command is that check a BIOMETRIC appointment in AMSTERDAM lower than this date 2022-10-30 for each 15 SECONDS and if there is one then send a message via WhatsApp or Telegram(Depends on which type of messaging you choose).
 
 > Once an appointment slot found, then the application will exit. So, you need to run it again to find new one.
 

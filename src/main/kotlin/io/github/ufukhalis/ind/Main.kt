@@ -26,19 +26,22 @@ fun main(args: Array<String>) {
         shortName = "t",
         description = "Messaging Type(whatsApp, telegram)"
     ).required()
+
     val whatsAppApiKey by parser.option(ArgType.String, shortName = "wp-key", description = "WhatsApp Api Key")
     val whatsAppPhoneNumber by parser.option(ArgType.String, shortName = "wp-pn", description = "WhatsApp Phone Number")
+
+    val telegramUserName by parser.option(ArgType.String, shortName = "tl-username", description = "Telegram User Name")
 
     val filterDate by parser.option(ArgType.String, shortName = "fd", description = "Filter date").required()
     val indLocationString by parser.option(
         ArgType.String,
         shortName = "l",
-        description = "IND Locations(${IndLocation.values().joinToString()})"
+        description = "IND Locations (${IndLocation.values().joinToString()})"
     ).required()
     val indProductString by parser.option(
         ArgType.String,
         shortName = "pd",
-        description = "IND appointment types${IndProduct.values().joinToString()}"
+        description = "IND appointment types (${IndProduct.values().joinToString()})"
     ).required()
     val period by parser.option(ArgType.Int, shortName = "p", description = "Checking period in seconds").default(30)
 
@@ -66,7 +69,8 @@ fun main(args: Array<String>) {
             indLocation,
             indProduct,
             whatsAppPhoneNumber,
-            whatsAppApiKey
+            whatsAppApiKey,
+            telegramUserName
         )
     }
 

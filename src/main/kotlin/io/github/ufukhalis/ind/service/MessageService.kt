@@ -13,6 +13,23 @@ interface MessageService {
 
     suspend fun sendMessage(message: String): Either<Throwable, Int>
 
+    suspend fun encodeMessage(message: String): String {
+        return withContext(Dispatchers.IO) {
+            URLEncoder.encode(message, "UTF-8")
+        }
+    }
+    suspend fun sendRequest(httpClient: HttpClient, url: String, errorMessage: String): Either<Throwable, Int> {
+        return runCatching {
+            val httpResponse = httpClient.get(url)
+
+            when (val code = httpResponse.status.value) {
+                in 200..299 -> Either.Right(code)
+                else -> Either.Left(RuntimeException("$errorMessage -> $code"))
+            }
+        }.getOrElse {
+            Either.Left(it)
+        }
+    }
 }
 
 class WhatsAppMessageService(
@@ -24,26 +41,25 @@ class WhatsAppMessageService(
     private val baseUrl = "https://api.callmebot.com/whatsapp.php?"
 
     override suspend fun sendMessage(message: String): Either<Throwable, Int> {
-        return runCatching {
-            val encoded = withContext(Dispatchers.IO) {
-                URLEncoder.encode(message, "UTF-8")
-            }
-            val response = httpClient.get("${baseUrl}phone=${phoneNumber}&text=$encoded&apikey=${apiKey}")
+        val encodedMessage = encodeMessage(message)
+        val url = "${baseUrl}phone=${phoneNumber}&text=$encodedMessage&apikey=${apiKey}"
 
-            when (val value = response.status.value) {
-                in 200..299 -> Either.Right(value)
-                else -> Either.Left(RuntimeException("The WhatsApp API has some issues -> $value"))
-            }
-
-        }.getOrElse {
-            Either.Left(it)
-        }
+        return sendRequest(httpClient, url, "The WhatsApp API has some issues")
     }
 }
 
-class TelegramMessageService : MessageService {
+class TelegramMessageService(
+    private val httpClient: HttpClient,
+    private val telegramUserName: String
+) : MessageService {
+
+    private val baseUrl = "https://api.callmebot.com/text.php?"
     override suspend fun sendMessage(message: String): Either<Throwable, Int> {
-        TODO("Not yet implemented")
+        val encodedMessage = encodeMessage(message)
+
+        val url = "${baseUrl}user=@${telegramUserName}&text=${encodedMessage}"
+
+        return sendRequest(httpClient, url, "The Telegram API has some issues")
     }
 }
 
@@ -55,7 +71,10 @@ val messageServiceModule = module {
         WhatsAppMessageService(httpClient, params[0], params[1])
     }
 
-    single<MessageService>(named("telegram")) {
-        TelegramMessageService()
+    single<MessageService>(named("telegram")) { params ->
+
+        val httpClient: HttpClient by inject(named("httpClient"))
+
+        TelegramMessageService(httpClient, params[0])
     }
 }
