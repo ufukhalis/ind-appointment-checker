@@ -2,32 +2,16 @@ package io.github.ufukhalis.ind.service
 
 import arrow.core.Either
 import io.ktor.client.*
-import io.ktor.client.request.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import java.net.URLEncoder
 
-interface MessageService {
-
+interface MessageService : HttpService {
     suspend fun sendMessage(message: String): Either<Throwable, Int>
 
     suspend fun encodeMessage(message: String): String {
-        return withContext(Dispatchers.IO) {
-            URLEncoder.encode(message, "UTF-8")
-        }
-    }
-    suspend fun sendRequest(httpClient: HttpClient, url: String, errorMessage: String): Either<Throwable, Int> {
-        return runCatching {
-            val httpResponse = httpClient.get(url)
-
-            when (val code = httpResponse.status.value) {
-                in 200..299 -> Either.Right(code)
-                else -> Either.Left(RuntimeException("$errorMessage -> $code"))
-            }
-        }.getOrElse {
-            Either.Left(it)
+        return with(message) {
+            URLEncoder.encode(this, "UTF-8")
         }
     }
 }

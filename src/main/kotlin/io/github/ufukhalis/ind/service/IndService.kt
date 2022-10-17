@@ -83,7 +83,9 @@ class IndService(
     }
 
     private suspend fun indChecker(): Either<Throwable, List<IndDataResponse>> {
-        val response = requestToInd()
+        val response = retry {
+            requestToInd()
+        }
 
         return response
             .map { it.data }
