@@ -16,7 +16,7 @@ jobs:
         run: echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
 
       - name: Build docker image
-        run: docker build -t ufukhalis/ind-appointment-checker:latest
+        run: docker build -t ufukhalis/ind-appointment-checker:latest .
 
       - name: Push to Docker Hub
         run: docker push ufukhalis/ind-appointment-checker:latest
