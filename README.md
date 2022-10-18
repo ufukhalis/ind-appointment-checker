@@ -19,7 +19,7 @@ The application itself uses JVM to be run, you can download the JAR file from th
 `IND Appointment Checker` is a console application so when you run the JAR file, you should pass some arguments to it. You can see available arguments running below command.
 
 ```shell
-java -jar ind-appointment-checker-1.1.0.jar -h
+java -jar ind-appointment-checker-1.2.0.jar -h
 
 --messagingType, -t -> Messaging Type(whatsApp, telegram) (always required) { String }
 --whatsAppApiKey, -wp-key -> WhatsApp Api Key { String }
@@ -43,14 +43,14 @@ And then, we can build the actual run command like below
 
 ```shell
 # WhatsApp Usage
-java -jar ind-appointment-checker-1.1.0.jar -t whatsApp -wp-key {yourApiKey} -wp-pn {yourWhatsAppPhoneNumber} -fd 2022-12-30 -l AMSTERDAM -p 15 -pd BIOMETRIC
+java -jar ind-appointment-checker-1.2.0.jar -t whatsApp -wp-key {yourApiKey} -wp-pn {yourWhatsAppPhoneNumber} -fd 2022-12-30 -l AMSTERDAM -p 15 -pd BIOMETRIC
 ```
 
 Or
 
 ```shell
 # Telegram Usage
-java -jar ind-appointment-checker-1.1.0.jar -t telegram -tl-username {yourTelegramUserName} -fd 2022-12-30 -l AMSTERDAM -p 15 -pd BIOMETRIC
+java -jar ind-appointment-checker-1.2.0.jar -t telegram -tl-username {yourTelegramUserName} -fd 2022-12-30 -l AMSTERDAM -p 15 -pd BIOMETRIC
 ```
 
 > The explanation of above command is that check a BIOMETRIC appointment in AMSTERDAM lower than this date 2022-10-30 for each 15 SECONDS and if there is one then send a message via WhatsApp or Telegram(Depends on which type of messaging you choose).
